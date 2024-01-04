@@ -101,8 +101,6 @@ jobs:
       run: ruby-build --verbose $RUBY_BUILD_RUBY_NAME $PREFIX
       env:
         CPPFLAGS: "-DENABLE_PATH_CHECK=0" # https://github.com/actions/virtual-environments/issues/267
-    - name: Create archive
-      run: tar czf ${{ steps.ruby.outputs.ruby }}-${{ steps.platform.outputs.platform }}.tar.gz -C $(dirname $PREFIX) $(basename $PREFIX)
     - name: Install Bundler if needed
       run: |
         if [ ! -e $PREFIX/bin/bundle ]; then
@@ -119,10 +117,3 @@ jobs:
     - run: bundle install
     - run: bundle exec rake --version
     - run: ruby test_subprocess.rb
-
-    - name: Upload Built Ruby
-      env:
-        GH_TOKEN: ${{ github.token }}
-        GH_REPO: ${{ github.repository }}
-      run: gh release upload "toolcache" "${{ steps.ruby.outputs.ruby }}-${{ steps.platform.outputs.platform }}.tar.gz"
-
