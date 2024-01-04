@@ -1,5 +1,6 @@
 name: Build Ruby for GitHub Actions
 on:
+  workflow_dispatch:
   push:
     paths-ignore:
     - README.md
@@ -10,11 +11,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-22.04, macos-11, macos-arm-oss ]
+        os: [ ubuntu-20.04 ]
         ruby: [ruby-3.3.0]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04-ppc64le
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - name: Set tag name
       id: info
       run: |
@@ -23,9 +24,7 @@ jobs:
     - name: Set platform
       id: platform
       run: |
-        platform=${{ matrix.os }}
-        platform=${platform/macos-11/macos-latest}
-        platform=${platform/macos-arm-oss/macos-13-arm64}
+        platform=${ubuntu-20.04/linux-13-ppc64le}
         echo "platform=$platform" >> $GITHUB_OUTPUT
     - name: Set ruby
       id: ruby
